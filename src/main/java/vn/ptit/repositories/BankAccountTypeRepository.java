@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import vn.ptit.entities.BankAccountType;
 
 @Repository
-public interface AccountTypeRepository extends JpaRepository<BankAccountType, Integer>{
+public interface BankAccountTypeRepository extends JpaRepository<BankAccountType, Integer>{
 
 }

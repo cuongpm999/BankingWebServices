@@ -45,11 +45,11 @@ public class Transaction {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "DepositAccountBankAccountId")
-	private DepositAccountBankAccount depositAccountBankAccount;
+	private DepositAccount depositAccount;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CreditAccountBankAccountId")
-	private CreditAccountBankAccount creditAccountBankAccount;
+	private CreditAccount creditAccount;
 
 	public int getId() {
 		return id;
@@ -115,21 +115,20 @@ public class Transaction {
 		this.employee = employee;
 	}
 
-	public DepositAccountBankAccount getDepositAccountBankAccount() {
-		return depositAccountBankAccount;
+	public DepositAccount getDepositAccount() {
+		return depositAccount;
 	}
 
-	public void setDepositAccountBankAccount(DepositAccountBankAccount depositAccountBankAccount) {
-		this.depositAccountBankAccount = depositAccountBankAccount;
+	public void setDepositAccount(DepositAccount depositAccount) {
+		this.depositAccount = depositAccount;
 	}
 
-	public CreditAccountBankAccount getCreditAccountBankAccount() {
-		return creditAccountBankAccount;
+	public CreditAccount getCreditAccount() {
+		return creditAccount;
 	}
 
-	public void setCreditAccountBankAccount(CreditAccountBankAccount creditAccountBankAccount) {
-		this.creditAccountBankAccount = creditAccountBankAccount;
+	public void setCreditAccount(CreditAccount creditAccount) {
+		this.creditAccount = creditAccount;
 	}
-	
 	
 }

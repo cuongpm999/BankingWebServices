@@ -28,18 +28,6 @@ public class Customer {
 	
 	@Column(name = "Address", nullable = false, length = 255)
 	private String address;
-	
-	public Customer() {
-		super();
-	}
-
-	public Customer(String fullName, String idCard, Date dateOfBirth, String address) {
-		super();
-		this.fullName = fullName;
-		this.idCard = idCard;
-		this.dateOfBirth = dateOfBirth;
-		this.address = address;
-	}
 
 	public int getId() {
 		return id;
