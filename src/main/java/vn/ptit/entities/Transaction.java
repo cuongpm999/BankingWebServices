@@ -20,6 +20,9 @@ public class Transaction {
 	@Column(name = "Id")
 	private int id;
 	
+	@Column(name = "Type")
+	private String type;
+	
 	@Column(name = "DateCreate")
 	private Date dateCreate;
 	
@@ -44,11 +47,11 @@ public class Transaction {
 	private Employee employee;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "DepositAccountBankAccountId")
+	@JoinColumn(name = "DepositAccountId")
 	private DepositAccount depositAccount;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "CreditAccountBankAccountId")
+	@JoinColumn(name = "CreditAccountId")
 	private CreditAccount creditAccount;
 
 	public int getId() {
@@ -129,6 +132,14 @@ public class Transaction {
 
 	public void setCreditAccount(CreditAccount creditAccount) {
 		this.creditAccount = creditAccount;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }
