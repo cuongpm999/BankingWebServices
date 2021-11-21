@@ -3,6 +3,7 @@ package vn.ptit.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.ptit.entities.Customer;
 import vn.ptit.repositories.CustomerRepository;
+import vn.ptit.services.CustomerService;
 
 @RestController
 @RequestMapping("/rest/api/customer")
 public class CustomerController {
 	@Autowired CustomerRepository customerRepository;
+	@Autowired CustomerService customerService;
 	
 	@GetMapping(value = "/find-all")
 	public List<Customer> findAll() {
-		return customerRepository.findAll();
+		return customerService.findAllByStatusTrue();
 	}
 	
 	@PostMapping(value = "/insert")
@@ -30,12 +33,13 @@ public class CustomerController {
 	
 	@GetMapping(value = "/find-by-id/{id}")
 	public Customer findById(@PathVariable("id") int id) {
-		return customerRepository.findById(id).get();
+		return customerService.findByIdAndStatusTrue(id);
 	}
 	
-	@GetMapping(value = "/delete-by-id/{id}")
-	public Integer deleteCustomerById(@PathVariable("id") int id) {
-		customerRepository.deleteById(id);
-		return 1;
+	@DeleteMapping(value = "/delete-by-id/{id}")
+	public void deleteCustomerById(@PathVariable("id") int id) {
+		Customer customer = customerRepository.findById(id).get();
+		customer.setStatus(false);
+		customerRepository.save(customer);
 	}
 }

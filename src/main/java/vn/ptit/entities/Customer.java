@@ -28,6 +28,9 @@ public class Customer {
 	
 	@Column(name = "Address", nullable = false, length = 255)
 	private String address;
+	
+	@Column(name = "status")
+	private boolean status;
 
 	public int getId() {
 		return id;
@@ -67,6 +70,14 @@ public class Customer {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 }

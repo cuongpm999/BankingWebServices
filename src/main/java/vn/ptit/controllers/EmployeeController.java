@@ -13,15 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.ptit.entities.Employee;
 import vn.ptit.repositories.EmployeeRepository;
+import vn.ptit.services.EmployeeService;
 
 @RestController
 @RequestMapping("/rest/api/employee")
 public class EmployeeController {
 	@Autowired EmployeeRepository employeeRepository;
+	@Autowired EmployeeService employeeService;
 	
 	@GetMapping("/find-all")
 	public List<Employee> findAll(){
-		return employeeRepository.findAll();
+		return employeeService.findAllByStatusTrue();
 	}
 	
 	@PostMapping("/insert")
@@ -32,7 +34,7 @@ public class EmployeeController {
 	
 	@GetMapping("/find-by-id/{id}")
 	public Employee findById(@PathVariable("id") int id){
-		return employeeRepository.findById(id).get();
+		return employeeService.findByIdAndStatusTrue(id);
 	}
 	
 	@PostMapping("/update")
@@ -42,6 +44,15 @@ public class EmployeeController {
 	
 	@DeleteMapping("/delete-by-id/{id}")
 	public void deleteById(@PathVariable("id") int id){
-		employeeRepository.deleteById(id);
+		Employee employee = employeeRepository.findById(id).get();
+		employee.setStatus(false);
+		employeeRepository.save(employee);
+		
 	}
+	
+	@GetMapping("/get/{username}")
+	public Employee getByUsername(@PathVariable("username") String username) {
+		return employeeService.loadEmployeeByUsername(username);
+	}
+
 }

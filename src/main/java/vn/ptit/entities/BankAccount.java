@@ -23,6 +23,9 @@ public class BankAccount {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "BankAccountTypeId")
 	private BankAccountType bankAccountType;
+	
+	@Column(name = "status")
+	private boolean status;
 
 	public String getId() {
 		return id;
@@ -46,6 +49,14 @@ public class BankAccount {
 
 	public void setBankAccountType(BankAccountType bankAccountType) {
 		this.bankAccountType = bankAccountType;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 }

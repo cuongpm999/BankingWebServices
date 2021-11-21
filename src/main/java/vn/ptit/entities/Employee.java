@@ -46,6 +46,9 @@ public class Employee {
 	@Column(name = "Position", length = 255)
 	private String position;
 	
+	@Column(name = "status")
+	private boolean status;
+	
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "employee", fetch = FetchType.EAGER)
 	private Account account;
@@ -137,6 +140,14 @@ public class Employee {
 
 	public void setSalaries(List<Salary> salaries) {
 		this.salaries = salaries;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 }
