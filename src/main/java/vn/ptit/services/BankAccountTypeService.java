@@ -9,7 +9,6 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Service;
 
 import vn.ptit.entities.BankAccountType;
-import vn.ptit.entities.Employee;
 
 @Service
 public class BankAccountTypeService {
@@ -20,5 +19,11 @@ public class BankAccountTypeService {
 		String jpql = "select e from BankAccountType e where e.status=true";
 		Query query = entityManager.createQuery(jpql, BankAccountType.class);
 		return query.getResultList();
+	}
+	
+	public BankAccountType findByIdAndStatusTrue(int id){
+		String jpql = "select e from BankAccountType e where e.status=true and e.id = "+id;
+		Query query = entityManager.createQuery(jpql, BankAccountType.class);
+		return (BankAccountType) query.getResultList().get(0);
 	}
 }
