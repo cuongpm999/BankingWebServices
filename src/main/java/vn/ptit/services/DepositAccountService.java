@@ -8,20 +8,20 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Service;
 
-import vn.ptit.entities.CreditAccount;
 import vn.ptit.entities.DepositAccount;
 
 @Service
 public class DepositAccountService {
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	public List<DepositAccount> findByCustomerId(int id) {
-		String jpql = "select a from DepositAccount a, CreatedBankAccount b where a.id = b.bankAccount.id and a.status = true and b.customer.id = "+id;
+		String jpql = "select a from DepositAccount a, CreatedBankAccount b where a.id = b.bankAccount.id and a.status = true and b.customer.id = "
+				+ id;
 		Query query = entityManager.createQuery(jpql, DepositAccount.class);
 		return query.getResultList();
 	}
-	
+
 	public DepositAccount findByIdAndStatusTrue(String id) {
 		String jpql = "select a from DepositAccount a where a.status = true and a.id = '"+id+"'";
 		Query query = entityManager.createQuery(jpql, DepositAccount.class);
