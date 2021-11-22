@@ -27,5 +27,11 @@ public class CustomerService {
 		Query query = entityManager.createQuery(jpql, Customer.class);
 		return (Customer) query.getResultList().get(0);
 	}
+	
+	public Customer findByAccountId(String id){
+		String jpql = "select e from Customer e, CreatedBankAccount c  where e.status=true and c.customer = e.id and c.bankAccount.id = '"+id+"'";
+		Query query = entityManager.createQuery(jpql, Customer.class);
+		return (Customer) query.getResultList().get(0);
+	}
 
 }

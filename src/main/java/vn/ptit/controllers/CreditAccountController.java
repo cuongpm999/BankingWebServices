@@ -65,5 +65,10 @@ public class CreditAccountController {
 		creditAccount = creditAccountRepository.save(creditAccount);
 		return creditAccount;
 	}
+	
+	@GetMapping(value = "/check-account/{id}")
+	public CreditAccount checkAccountId(@PathVariable("id") String id) {
+		return creditAccountService.checkAccountId(id);
+	}
 
 }

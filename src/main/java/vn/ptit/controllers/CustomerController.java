@@ -42,4 +42,9 @@ public class CustomerController {
 		customer.setStatus(false);
 		customerRepository.save(customer);
 	}
+	
+	@GetMapping(value = "/find-by-account/{id}")
+	public Customer findByAccountId(@PathVariable("id") String id) {
+		return customerService.findByAccountId(id);
+	}
 }
