@@ -24,41 +24,44 @@ import vn.ptit.utils.HelperCreateBankAccount;
 @RestController
 @RequestMapping("/rest/api/deposit-account")
 public class DepositAccountController {
-	@Autowired DepositAccountRepository depositAccountRepository;
-	@Autowired DepositAccountService depositAccountService;
-	@Autowired CreatedBankAccountRepository createdBankAccountRepository;
-	
+	@Autowired
+	DepositAccountRepository depositAccountRepository;
+	@Autowired
+	DepositAccountService depositAccountService;
+	@Autowired
+	CreatedBankAccountRepository createdBankAccountRepository;
+
 	@GetMapping("/find-by-customer/{id}")
-	public List<DepositAccount> findByCustomer(@PathVariable("id") int id){
+	public List<DepositAccount> findByCustomer(@PathVariable("id") int id) {
 		return depositAccountService.findByCustomerId(id);
 	}
-	
+
 	@PostMapping("/insert")
 	@Transactional
-	public DepositAccount insert(@RequestBody HelperCreateBankAccount helperCreateBankAccount){
+	public DepositAccount insert(@RequestBody HelperCreateBankAccount helperCreateBankAccount) {
 		DepositAccount depositAccount = helperCreateBankAccount.getDepositAccount();
 		CreatedBankAccount createdBankAccount = helperCreateBankAccount.getCreatedBankAccount();
-		
+
 		depositAccount = depositAccountRepository.save(depositAccount);
 		createdBankAccount = createdBankAccountRepository.save(createdBankAccount);
-		
+
 		return depositAccount;
 	}
-	
+
 	@DeleteMapping(value = "/delete-by-id/{id}")
 	public void deleteById(@PathVariable("id") String id) {
 		DepositAccount depositAccount = depositAccountRepository.findById(id).get();
 		depositAccount.setStatus(false);
 		depositAccountRepository.save(depositAccount);
 	}
-	
+
 	@GetMapping(value = "/find-by-id/{id}")
 	public DepositAccount findById(@PathVariable("id") String id) {
 		return depositAccountService.findByIdAndStatusTrue(id);
 	}
-	
+
 	@PostMapping("/update")
-	public DepositAccount update(@RequestBody DepositAccount depositAccount){
+	public DepositAccount update(@RequestBody DepositAccount depositAccount) {
 		depositAccount = depositAccountRepository.save(depositAccount);
 		return depositAccount;
 	}
