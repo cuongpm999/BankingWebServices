@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.ptit.entities.CreatedBankAccount;
-import vn.ptit.entities.CreditAccount;
 import vn.ptit.entities.DepositAccount;
 import vn.ptit.repositories.CreatedBankAccountRepository;
 import vn.ptit.repositories.DepositAccountRepository;
