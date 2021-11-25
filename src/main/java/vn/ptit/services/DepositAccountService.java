@@ -23,7 +23,7 @@ public class DepositAccountService {
 	}
 
 	public DepositAccount findByIdAndStatusTrue(String id) {
-		String jpql = "select a from DepositAccount a where a.status = true and a.id = '"+id+"'";
+		String jpql = "select a from DepositAccount a where a.status = true and a.id = '" + id + "'";
 		Query query = entityManager.createQuery(jpql, DepositAccount.class);
 		return (DepositAccount) query.getResultList().get(0);
 	}
