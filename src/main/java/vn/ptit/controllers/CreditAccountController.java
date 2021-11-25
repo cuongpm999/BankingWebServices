@@ -1,13 +1,12 @@
 package vn.ptit.controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.ptit.entities.CreatedBankAccount;
 import vn.ptit.entities.CreditAccount;
-import vn.ptit.entities.Customer;
 import vn.ptit.repositories.CreatedBankAccountRepository;
 import vn.ptit.repositories.CreditAccountRepository;
 import vn.ptit.services.CreditAccountService;
@@ -69,6 +67,14 @@ public class CreditAccountController {
 	@GetMapping(value = "/check-account/{id}")
 	public CreditAccount checkAccountId(@PathVariable("id") String id) {
 		return creditAccountService.checkAccountId(id);
+	}
+	
+	@GetMapping("/find-by-employee/{id}")
+	public List<CreatedBankAccount> quantityCreateDepositAccountByEmployee(@PathVariable("id") int employeeId) {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM");
+		int month = Integer.parseInt(sdf.format(date));
+		return creditAccountRepository.quantityCreateCreditAccountByEmployee(month, employeeId);
 	}
 
 }

@@ -23,6 +23,7 @@ import vn.ptit.repositories.DepositAccountRepository;
 import vn.ptit.repositories.TransactionRepository;
 import vn.ptit.services.DepositAccountService;
 import vn.ptit.services.DepositService;
+import vn.ptit.services.TransactionService;
 
 @RestController
 @RequestMapping("/rest/api/deposit")
@@ -31,6 +32,7 @@ public class DepositController {
 	@Autowired TransactionRepository transactionRepository;
 	@Autowired DepositAccountRepository depositAccountRepository;
 	@Autowired DepositAccountService depositAccountService;
+	@Autowired TransactionService transactionService;
 	
 	@GetMapping("/find-by-deposit-account/{id}")
 	public List<Transaction> findByDepositAccount(@PathVariable("id") String id){
@@ -54,6 +56,16 @@ public class DepositController {
 	@GetMapping("/find-transaction-by-id/{id}")
 	public Transaction findById(@PathVariable("id") int id){
 		return transactionRepository.findById(id).get();
+	}
+	
+	@GetMapping("/find-first-transactions-in-month/{id}")
+	public List<Transaction> findByEmployeeId(@PathVariable("id") int employeeId){
+		return transactionService.findFirstTransactionOfDepositAccountInMonth(employeeId);
+	}
+	
+	@GetMapping("/find-first-transactions-deposit-account/{id}")
+	public List<Transaction> findByEmployeeCreatedDepositAccount(@PathVariable("id") int employeeId){
+		return transactionService.findFirstTransactionOfDepositAccount(employeeId);
 	}
 	
 }
