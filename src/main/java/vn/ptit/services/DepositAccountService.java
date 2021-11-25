@@ -27,5 +27,11 @@ public class DepositAccountService {
 		Query query = entityManager.createQuery(jpql, DepositAccount.class);
 		return (DepositAccount) query.getResultList().get(0);
 	}
+	
+	public List<DepositAccount> findAllAndStatusTrue() {
+		String jpql = "select a from DepositAccount a where a.status = true order by a.balance desc";
+		Query query = entityManager.createQuery(jpql, DepositAccount.class);
+		return query.getResultList();
+	}
 
 }

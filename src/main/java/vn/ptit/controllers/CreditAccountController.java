@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.ptit.entities.CreatedBankAccount;
 import vn.ptit.entities.CreditAccount;
 import vn.ptit.entities.Customer;
+import vn.ptit.entities.DepositAccount;
 import vn.ptit.repositories.CreatedBankAccountRepository;
 import vn.ptit.repositories.CreditAccountRepository;
 import vn.ptit.services.CreditAccountService;
@@ -69,6 +70,11 @@ public class CreditAccountController {
 	@GetMapping(value = "/check-account/{id}")
 	public CreditAccount checkAccountId(@PathVariable("id") String id) {
 		return creditAccountService.checkAccountId(id);
+	}
+	
+	@GetMapping("/find-all")
+	public List<CreditAccount> findAll() {
+		return creditAccountService.findAllAndStatusTrue();
 	}
 
 }

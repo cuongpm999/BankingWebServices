@@ -65,5 +65,10 @@ public class DepositAccountController {
 		depositAccount = depositAccountRepository.save(depositAccount);
 		return depositAccount;
 	}
+	
+	@GetMapping("/find-all")
+	public List<DepositAccount> findAll() {
+		return depositAccountService.findAllAndStatusTrue();
+	}
 
 }
