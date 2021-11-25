@@ -69,5 +69,12 @@ public class DepositAccountController {
 	public List<DepositAccount> findAll() {
 		return depositAccountService.findAllAndStatusTrue();
 	}
+	
+	@GetMapping("/count/{id}")
+	public Boolean countDepositAccountByCustomer(@PathVariable("id") int id) {
+		int cnt = depositAccountRepository.countDepositAccountByCustomer(id);
+		if(cnt>=3) return false;
+		return true;
+	}
 
 }

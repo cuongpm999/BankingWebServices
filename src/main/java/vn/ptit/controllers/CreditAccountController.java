@@ -77,11 +77,18 @@ public class CreditAccountController {
 	}
 
 	@GetMapping("/find-by-employee/{id}")
-	public List<CreatedBankAccount> quantityCreateDepositAccountByEmployee(@PathVariable("id") int employeeId) {
+	public List<CreatedBankAccount> quantityCreateCreditAccountByEmployee(@PathVariable("id") int employeeId) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM");
 		int month = Integer.parseInt(sdf.format(date));
-		return creditAccountRepository.quantityCreateCreditAccountByEmployee(month, employeeId);
+		return createdBankAccountRepository.quantityCreateCreditAccountByEmployee(month, employeeId);
+	}
+	
+	@GetMapping("/count/{id}")
+	public Boolean countCreditAccountByCustomer(@PathVariable("id") int id) {
+		int cnt = creditAccountRepository.countCreditAccountByCustomer(id);
+		if(cnt>=2) return false;
+		return true;
 	}
 
 }
