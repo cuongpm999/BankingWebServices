@@ -36,10 +36,6 @@ public class HibernateConfig {
 	@Bean(destroyMethod = "close")
 	protected DataSource dataSource() {
 		HikariConfig dataSourceConfig = new HikariConfig();
-		dataSourceConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSourceConfig.setJdbcUrl("jdbc:mysql://team1-java-web.c41fdgtlmuma.us-east-2.rds.amazonaws.com:3306/banking_project?useUnicode=true&characterEncoding=UTF-8");
-		dataSourceConfig.setUsername("root");
-		dataSourceConfig.setPassword("root123456");
 		return new HikariDataSource(dataSourceConfig);
 	}
 
