@@ -44,6 +44,7 @@ public class DepositController {
 	public Boolean insert(@RequestBody Transaction transaction) {
 		DepositAccount depositAccount = depositAccountService.findByIdAndStatusTrue(transaction.getDepositAccount().getId());
 		double afterBalanceDeposit = depositAccount.getBalance()+transaction.getMoney();
+		if(afterBalanceDeposit<depositAccount.getMinimumBalance()) return false;
 		transaction.setDepositAccount(depositAccount);
 		transaction.setType("DEPOSIT");
 		transaction.setAfterBalanceDeposit(afterBalanceDeposit);
@@ -58,14 +59,16 @@ public class DepositController {
 		return transactionRepository.findById(id).get();
 	}
 	
-	@GetMapping("/find-first-transactions-in-month/{id}")
-	public List<Transaction> findByEmployeeId(@PathVariable("id") int employeeId){
-		return transactionService.findFirstTransactionOfDepositAccountInMonth(employeeId);
+	@PostMapping("/find-first-transactions-in-month")
+	public List<Transaction> findByEmployeeId(@RequestBody List<String> text){
+		
+		return transactionService.findFirstTransactionInMonth(Integer.parseInt(text.get(0)),text.get(1));
 	}
 	
-	@GetMapping("/find-first-transactions-deposit-account/{id}")
-	public List<Transaction> findByEmployeeCreatedDepositAccount(@PathVariable("id") int employeeId){
-		return transactionService.findFirstTransactionOfDepositAccount(employeeId);
+	@PostMapping("/find-first-transactions-deposit-account")
+	public List<Transaction> findByEmployeeCreatedDepositAccount(@RequestBody List<String> text){
+
+		return transactionService.findFirstTransactionToManager(Integer.parseInt(text.get(0)),text.get(1));
 	}
 	
 }

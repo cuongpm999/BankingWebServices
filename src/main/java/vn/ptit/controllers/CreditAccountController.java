@@ -76,12 +76,12 @@ public class CreditAccountController {
 		return creditAccountService.findAllAndStatusTrue();
 	}
 
-	@GetMapping("/find-by-employee/{id}")
-	public List<CreatedBankAccount> quantityCreateCreditAccountByEmployee(@PathVariable("id") int employeeId) {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM");
-		int month = Integer.parseInt(sdf.format(date));
-		return createdBankAccountRepository.quantityCreateCreditAccountByEmployee(month, employeeId);
+	@PostMapping("/find-create-bank-account-by-employee")
+	public List<CreatedBankAccount> quantityCreateCreditAccountByEmployee(@RequestBody List<String> text) {
+		String dates[] = text.get(1).split("\\/");
+		int month = Integer.parseInt(dates[0]);
+		int year = Integer.parseInt(dates[1]);
+		return createdBankAccountRepository.quantityCreateCreditAccountByEmployee(month,year, Integer.parseInt(text.get(0)));
 	}
 	
 	@GetMapping("/count/{id}")

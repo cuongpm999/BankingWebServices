@@ -16,7 +16,7 @@ public class CreditService {
 	private EntityManager entityManager;
 
 	public List<Transaction> findByCreditAccount(String id) {
-		String jpql = "select a from Transaction a where a.type = 'CREDIT' and a.creditAccount.id =" + id;
+		String jpql = "select a from Transaction a where a.type = 'CREDIT' and a.creditAccount.id ='" + id+"'";
 		Query query = entityManager.createQuery(jpql, Transaction.class);
 		return query.getResultList();
 	}

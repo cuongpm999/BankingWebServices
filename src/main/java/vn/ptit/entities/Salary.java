@@ -28,11 +28,8 @@ public class Salary {
 	@Column(name = "BonusSalary")
 	private double bonusSalary;
 	
-	@Column(name = "DateStart")
-	private Date dateStart;
-	
-	@Column(name = "DateEnd")
-	private Date dateEnd;
+	@Column(name = "DateSalary")
+	private String dateSalary;
 	
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -63,20 +60,12 @@ public class Salary {
 		this.bonusSalary = bonusSalary;
 	}
 
-	public Date getDateStart() {
-		return dateStart;
+	public String getDateSalary() {
+		return dateSalary;
 	}
 
-	public void setDateStart(Date dateStart) {
-		this.dateStart = dateStart;
-	}
-
-	public Date getDateEnd() {
-		return dateEnd;
-	}
-
-	public void setDateEnd(Date dateEnd) {
-		this.dateEnd = dateEnd;
+	public void setDateSalary(String dateSalary) {
+		this.dateSalary = dateSalary;
 	}
 
 	public Employee getEmployee() {

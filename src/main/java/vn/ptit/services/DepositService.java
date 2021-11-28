@@ -16,7 +16,7 @@ public class DepositService {
 	private EntityManager entityManager;
 
 	public List<Transaction> findByDepositAccount(String id) {
-		String jpql = "select a from Transaction a where a.type = 'DEPOSIT' and a.depositAccount.id =" + id;
+		String jpql = "select a from Transaction a where a.type = 'DEPOSIT' and a.depositAccount.id ='" + id+"'";
 		Query query = entityManager.createQuery(jpql, Transaction.class);
 		return query.getResultList();
 	}
