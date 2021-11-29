@@ -10,6 +10,6 @@ import vn.ptit.entities.CreatedBankAccount;
 
 @Repository
 public interface CreatedBankAccountRepository extends JpaRepository<CreatedBankAccount, Integer>{
-	@Query("SELECT u FROM CreatedBankAccount u, CreditAccount c WHERE u.bankAccount.id = c.id AND MONTH(u.dateCreate) = ?1 AND u.employee.id = ?2")
-	public List<CreatedBankAccount> quantityCreateCreditAccountByEmployee(int month, int employeeId);
+	@Query("SELECT u FROM CreatedBankAccount u, CreditAccount c WHERE u.bankAccount.id = c.id AND MONTH(u.dateCreate) = ?1 AND YEAR(u.dateCreate) = ?2 AND u.employee.id = ?3")
+	public List<CreatedBankAccount> quantityCreateCreditAccountByEmployee(int month,int year, int employeeId);
 }
