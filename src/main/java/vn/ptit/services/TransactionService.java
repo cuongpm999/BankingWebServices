@@ -53,7 +53,8 @@ public class TransactionService {
 				e.printStackTrace();
 			}
 			customerTransactionStat.setAddress(records.get(i)[4].toString());
-			customerTransactionStat.setTongTienGiaoDich(Double.parseDouble(records.get(i)[6].toString()));
+			customerTransactionStat.setEmail(records.get(i)[6].toString());
+			customerTransactionStat.setTongTienGiaoDich(Double.parseDouble(records.get(i)[7].toString()));
 			customerTransactionStats.add(customerTransactionStat);
 		}
 
