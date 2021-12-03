@@ -44,7 +44,7 @@ public class CreditAccountService {
 			return null;
 		}
 	}
-	
+
 	public List<CreditAccount> findAllAndStatusTrue() {
 		String jpql = "select a from CreditAccount a where a.status = true order by a.balance desc";
 		Query query = entityManager.createQuery(jpql, CreditAccount.class);

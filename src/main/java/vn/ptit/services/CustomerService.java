@@ -41,7 +41,14 @@ public class CustomerService {
 	}
 
 	public List<CustomerDepositStat> findAllWithBalanceInDepositMax(){
-		String sql = "SELECT Customer.*,B.deposit AS CustomerDepositStat FROM (SELECT SUM(A.Balance) AS 'deposit', A.CustomerId FROM (SELECT CreatedBankAccount.*,BankAccount.Balance FROM CreatedBankAccount,BankAccount,DepositAccount where CreatedBankAccount.BankAccountId = BankAccount.Id and BankAccount.Id = DepositAccount.BankAccountId and BankAccount.status = 1) AS A GROUP BY A.CustomerId ORDER BY SUM(A.Balance) DESC) AS B, Customer WHERE Customer.Id = B.CustomerId and Customer.status = 1";
+		String sql = "SELECT Customer.*,B.deposit AS CustomerDepositStat "
+				+ "FROM (SELECT SUM(A.Balance) AS 'deposit', A.CustomerId FROM "
+				+ "(SELECT CreatedBankAccount.*,BankAccount.Balance "
+				+ "FROM CreatedBankAccount,BankAccount,DepositAccount WHERE "
+				+ "CreatedBankAccount.BankAccountId = BankAccount.Id "
+				+ "AND BankAccount.Id = DepositAccount.BankAccountId "
+				+ "AND BankAccount.status = 1) AS A GROUP BY A.CustomerId ORDER BY SUM(A.Balance) DESC) AS B, Customer "
+				+ "WHERE Customer.Id = B.CustomerId and Customer.status = 1";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setMaxResults(10);
 		List<Object[]> records = query.getResultList();
@@ -52,6 +59,7 @@ public class CustomerService {
 			customerDepositStat.setId(Integer.parseInt(records.get(i)[0].toString()));
 			customerDepositStat.setFullName(records.get(i)[1].toString());
 			customerDepositStat.setIdCard(records.get(i)[2].toString());
+			customerDepositStat.setEmail(records.get(i)[6].toString());
 			System.out.println(records.get(i)[3].toString());
 			try {
 				customerDepositStat.setDateOfBirth(simpleDateFormat.parse(records.get(i)[3].toString()));
@@ -59,7 +67,7 @@ public class CustomerService {
 				e.printStackTrace();
 			}
 			customerDepositStat.setAddress(records.get(i)[4].toString());
-			customerDepositStat.setDeposit(Double.parseDouble(records.get(i)[6].toString()));
+			customerDepositStat.setDeposit(Double.parseDouble(records.get(i)[7].toString()));
 			customerDepositStats.add(customerDepositStat);
 		}
 			
@@ -67,7 +75,14 @@ public class CustomerService {
 	}
 	
 	public List<CustomerCreditStat> findAllWithBalanceInCreditMax(){
-		String sql = "SELECT Customer.*,B.credit FROM (SELECT SUM(A.Balance) AS 'credit', A.CustomerId FROM (SELECT CreatedBankAccount.*,BankAccount.Balance FROM CreatedBankAccount,BankAccount,CreditAccount where CreatedBankAccount.BankAccountId = BankAccount.Id and BankAccount.Id = CreditAccount.BankAccountId and BankAccount.status = 1) AS A GROUP BY A.CustomerId ORDER BY SUM(A.Balance) DESC) AS B, Customer WHERE Customer.Id = B.CustomerId and Customer.status = 1 and B.credit > 0";
+		String sql = "SELECT Customer.*,B.credit "
+				+ "FROM (SELECT SUM(A.Balance) AS 'credit', A.CustomerId "
+				+ "FROM (SELECT CreatedBankAccount.*,BankAccount.Balance "
+				+ "FROM CreatedBankAccount,BankAccount,CreditAccount WHERE "
+				+ "CreatedBankAccount.BankAccountId = BankAccount.Id AND "
+				+ "BankAccount.Id = CreditAccount.BankAccountId AND "
+				+ "BankAccount.status = 1) AS A GROUP BY A.CustomerId ORDER BY SUM(A.Balance) DESC) AS B, Customer "
+				+ "WHERE Customer.Id = B.CustomerId and Customer.status = 1 and B.credit > 0";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setMaxResults(10);
 		List<Object[]> records = query.getResultList();
@@ -78,6 +93,7 @@ public class CustomerService {
 			customerCreditStat.setId(Integer.parseInt(records.get(i)[0].toString()));
 			customerCreditStat.setFullName(records.get(i)[1].toString());
 			customerCreditStat.setIdCard(records.get(i)[2].toString());
+			customerCreditStat.setEmail(records.get(i)[6].toString());
 			System.out.println(records.get(i)[3].toString());
 			try {
 				customerCreditStat.setDateOfBirth(simpleDateFormat.parse(records.get(i)[3].toString()));
@@ -85,7 +101,7 @@ public class CustomerService {
 				e.printStackTrace();
 			}
 			customerCreditStat.setAddress(records.get(i)[4].toString());
-			customerCreditStat.setCredit(Double.parseDouble(records.get(i)[6].toString()));
+			customerCreditStat.setCredit(Double.parseDouble(records.get(i)[7].toString()));
 			customerCreditStats.add(customerCreditStat);
 		}
 		
