@@ -16,21 +16,32 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Id")
 	private int id;
-	
+
 	@Column(name = "FullName", nullable = false, length = 255)
 	private String fullName;
-	
+
 	@Column(name = "IdCard", nullable = false, length = 255)
 	private String idCard;
-	
+
 	@Column(name = "DateOfBirth")
 	private Date dateOfBirth;
-	
+
 	@Column(name = "Address", nullable = false, length = 255)
 	private String address;
-	
+
 	@Column(name = "status")
 	private boolean status;
+
+	@Column(name = "Email", nullable = false, length = 255)
+	private String email;
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public int getId() {
 		return id;
@@ -79,5 +90,5 @@ public class Customer {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	
+
 }
