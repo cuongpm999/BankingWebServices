@@ -2,6 +2,7 @@ package vn.ptit.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,4 +103,10 @@ public class SalaryController {
 		salaryRepository.save(salary);
 		return true;
 	}
+	
+	@PostMapping("/filter")
+	public List<Salary> filter(@RequestBody Map<String, Object> map){
+		return salaryService.filter(map);
+	}
+	
 }
