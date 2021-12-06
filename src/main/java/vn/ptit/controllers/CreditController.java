@@ -54,4 +54,9 @@ public class CreditController {
 	public Transaction findById(@PathVariable("id") int id){
 		return transactionRepository.findById(id).get();
 	}
+	
+	@PostMapping("/statistic-by-credit-account/{id}")
+	public List<Transaction> statisticByCreditAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
+		return creditService.statisticByCreditAccount(id, map);
+	}
 }
