@@ -1,6 +1,7 @@
 package vn.ptit.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +22,9 @@ public class EmployeeController {
 	@Autowired EmployeeRepository employeeRepository;
 	@Autowired EmployeeService employeeService;
 	
-	@GetMapping("/find-all")
-	public List<Employee> findAll(){
-		return employeeService.findAllByStatusTrue();
+	@PostMapping("/find-all")
+	public List<Employee> findAll(@RequestBody Map<String, Object> map){
+		return employeeService.findAllByStatusTrue(map);
 	}
 	
 	@PostMapping("/insert")

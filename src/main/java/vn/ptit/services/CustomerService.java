@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import vn.ptit.entities.Customer;
 import vn.ptit.entities.CustomerCreditStat;
 import vn.ptit.entities.CustomerDepositStat;
+import vn.ptit.entities.CustomerTransactionStat;
 import vn.ptit.entities.Employee;
 
 @Service
@@ -122,6 +123,15 @@ public class CustomerService {
 			customerDepositStat.setDeposit(Double.parseDouble(records.get(i)[7].toString()));
 			customerDepositStats.add(customerDepositStat);
 		}
+		
+		Collections.sort(customerDepositStats, new Comparator<CustomerDepositStat>() {
+
+			@Override
+			public int compare(CustomerDepositStat o1, CustomerDepositStat o2) {
+
+				return Double.compare(o2.getDeposit(), o1.getDeposit());
+			}
+		});
 
 		return customerDepositStats;
 	}
@@ -155,6 +165,15 @@ public class CustomerService {
 			customerCreditStat.setCredit(Double.parseDouble(records.get(i)[7].toString()));
 			customerCreditStats.add(customerCreditStat);
 		}
+		
+		Collections.sort(customerCreditStats, new Comparator<CustomerCreditStat>() {
+
+			@Override
+			public int compare(CustomerCreditStat o1, CustomerCreditStat o2) {
+
+				return Double.compare(o2.getCredit(), o1.getCredit());
+			}
+		});
 
 		return customerCreditStats;
 	}

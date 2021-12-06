@@ -3,6 +3,8 @@ package vn.ptit.services;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +59,15 @@ public class TransactionService {
 			customerTransactionStat.setTongTienGiaoDich(Double.parseDouble(records.get(i)[7].toString()));
 			customerTransactionStats.add(customerTransactionStat);
 		}
+		
+		Collections.sort(customerTransactionStats, new Comparator<CustomerTransactionStat>() {
+
+			@Override
+			public int compare(CustomerTransactionStat o1, CustomerTransactionStat o2) {
+
+				return Double.compare(o2.getTongTienGiaoDich(), o1.getTongTienGiaoDich());
+			}
+		});
 
 		return customerTransactionStats;
 	}
