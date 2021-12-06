@@ -1,15 +1,11 @@
 package vn.ptit.controllers;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +30,9 @@ public class DepositController {
 	@Autowired DepositAccountService depositAccountService;
 	@Autowired TransactionService transactionService;
 	
-	@GetMapping("/find-by-deposit-account/{id}")
-	public List<Transaction> findByDepositAccount(@PathVariable("id") String id){
-		return depositService.findByDepositAccount(id);
+	@PostMapping("/find-by-deposit-account/{id}")
+	public List<Transaction> findByDepositAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
+		return depositService.findByDepositAccount(id, map);
 	}
 	
 	@PostMapping(value = "/insert")

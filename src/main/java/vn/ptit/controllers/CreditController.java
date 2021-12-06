@@ -1,6 +1,7 @@
 package vn.ptit.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Isolation;
@@ -27,9 +28,9 @@ public class CreditController {
 	@Autowired CreditAccountRepository creditAccountRepository;
 	@Autowired CreditAccountService creditAccountService;
 	
-	@GetMapping("/find-by-credit-account/{id}")
-	public List<Transaction> findByCreditAccount(@PathVariable("id") String id){
-		return creditService.findByCreditAccount(id);
+	@PostMapping("/find-by-credit-account/{id}")
+	public List<Transaction> findByCreditAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
+		return creditService.findByCreditAccount(id, map);
 	}
 	
 	@PostMapping(value = "/insert")
