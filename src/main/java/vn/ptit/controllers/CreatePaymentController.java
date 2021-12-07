@@ -22,6 +22,7 @@ import vn.ptit.repositories.TransactionRepository;
 import vn.ptit.services.CreatePaymentService;
 import vn.ptit.services.CreditAccountService;
 import vn.ptit.services.DepositAccountService;
+import vn.ptit.utils.HelperTransaction;
 
 @RestController
 @RequestMapping("/rest/api/create-payment")
@@ -40,17 +41,17 @@ public class CreatePaymentController {
 	
 	@PostMapping("/insert")
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public Boolean insertPayment(@RequestBody Transaction transaction) {
+	public HelperTransaction insertPayment(@RequestBody Transaction transaction) {
 		DepositAccount depositAccount = depositAccountService.findByIdAndStatusTrue(transaction.getDepositAccount().getId());
 		CreditAccount creditAccount = creditAccountService.findByIdAndStatusTrue(transaction.getCreditAccount().getId());
-		double afterBalanceCredit = creditAccount.getBalance() - transaction.getMoney();
-		if(afterBalanceCredit<0) {
-			transaction.setMoney(transaction.getMoney() + afterBalanceCredit);
-			afterBalanceCredit = 0;
-		}
+		
 		double afterBalanceDeposit = depositAccount.getBalance() - transaction.getMoney();
 		if(afterBalanceDeposit<depositAccount.getMinimumBalance()) {
-			return false;
+			return new HelperTransaction(0,transaction);
+		}
+		double afterBalanceCredit = creditAccount.getBalance() - transaction.getMoney();
+		if(afterBalanceCredit<0) {
+			return new HelperTransaction(1,transaction);
 		}
 		depositAccount.setBalance(afterBalanceDeposit);
 		creditAccount.setBalance(afterBalanceCredit);
@@ -61,9 +62,9 @@ public class CreatePaymentController {
 		transaction.setType("PAYMENT");
 		transaction.setAfterBalanceCredit(afterBalanceCredit);
 		transaction.setAfterBalanceDeposit(afterBalanceDeposit);
-		transactionRepository.save(transaction);
+		transaction = transactionRepository.save(transaction);
 		
-		return true;
+		return new HelperTransaction(2,transaction);
 	}
 	
 	@GetMapping("/find-transaction-by-id/{id}")

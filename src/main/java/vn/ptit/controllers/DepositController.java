@@ -20,6 +20,7 @@ import vn.ptit.repositories.TransactionRepository;
 import vn.ptit.services.DepositAccountService;
 import vn.ptit.services.DepositService;
 import vn.ptit.services.TransactionService;
+import vn.ptit.utils.HelperTransaction;
 
 @RestController
 @RequestMapping("/rest/api/deposit")
@@ -42,19 +43,19 @@ public class DepositController {
 
 	@PostMapping(value = "/insert")
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public Boolean insert(@RequestBody Transaction transaction) {
+	public HelperTransaction insert(@RequestBody Transaction transaction) {
 		DepositAccount depositAccount = depositAccountService
 				.findByIdAndStatusTrue(transaction.getDepositAccount().getId());
 		double afterBalanceDeposit = depositAccount.getBalance() + transaction.getMoney();
 		if (afterBalanceDeposit < depositAccount.getMinimumBalance())
-			return false;
+			return new HelperTransaction(0, transaction);
 		transaction.setDepositAccount(depositAccount);
 		transaction.setType("DEPOSIT");
 		transaction.setAfterBalanceDeposit(afterBalanceDeposit);
 		depositAccount.setBalance(afterBalanceDeposit);
-		transactionRepository.save(transaction);
+		transaction = transactionRepository.save(transaction);
 		depositAccountRepository.save(depositAccount);
-		return true;
+		return new HelperTransaction(1, transaction);
 	}
 
 	@GetMapping("/find-transaction-by-id/{id}")

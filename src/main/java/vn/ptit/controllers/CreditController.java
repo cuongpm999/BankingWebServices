@@ -19,6 +19,7 @@ import vn.ptit.repositories.CreditAccountRepository;
 import vn.ptit.repositories.TransactionRepository;
 import vn.ptit.services.CreditAccountService;
 import vn.ptit.services.CreditService;
+import vn.ptit.utils.HelperTransaction;
 
 @RestController
 @RequestMapping("/rest/api/credit")
@@ -35,19 +36,19 @@ public class CreditController {
 	
 	@PostMapping(value = "/insert")
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public Boolean insert(@RequestBody Transaction transaction) {
+	public HelperTransaction insert(@RequestBody Transaction transaction) {
 		CreditAccount creditAccount = creditAccountService.findByIdAndStatusTrue(transaction.getCreditAccount().getId());
 		double afterBalanceCredit = creditAccount.getBalance()+transaction.getMoney();
 		if(afterBalanceCredit>creditAccount.getLimitBalance()) {
-			return false;
+			return new HelperTransaction(0, transaction);
 		}
 		transaction.setType("CREDIT");
 		transaction.setAfterBalanceCredit(afterBalanceCredit);
 		transaction.setCreditAccount(creditAccount);
 		creditAccount.setBalance(afterBalanceCredit);
-		transactionRepository.save(transaction);
+		transaction = transactionRepository.save(transaction);
 		creditAccountRepository.save(creditAccount);
-		return true;
+		return new HelperTransaction(1, transaction);
 	}
 	
 	@GetMapping("/find-transaction-by-id/{id}")
