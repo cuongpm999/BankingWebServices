@@ -17,7 +17,7 @@ import vn.ptit.entities.Salary;
 public class SalaryService {
 	@PersistenceContext
 	EntityManager entityManager;
-	private int LIMIT = 5;
+	private int LIMIT = 20;
 
 	public List<Salary> findSalariesByEmployee(int employeeId) {
 		String jpql = "SELECT s FROM Salary s WHERE s.employee.id = " + employeeId;

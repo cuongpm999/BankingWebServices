@@ -18,7 +18,7 @@ public class CreatePaymentService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private int LIMIT = 5;
+	private int LIMIT = 20;
 
 	public List<Transaction> findById(String id, Map<String, Object> map) {
 		int page = 1;
@@ -41,7 +41,7 @@ public class CreatePaymentService {
 				Collections.sort(transactions, new Comparator<Transaction>() {
 					@Override
 					public int compare(Transaction o1, Transaction o2) {
-						return (int) (o1.getMoney() - o2.getMoney());
+						return Double.compare(o1.getMoney(), o2.getMoney());
 					}
 				});
 			}
@@ -49,7 +49,7 @@ public class CreatePaymentService {
 				Collections.sort(transactions, new Comparator<Transaction>() {
 					@Override
 					public int compare(Transaction o1, Transaction o2) {
-						return (int) (o2.getMoney() - o1.getMoney());
+						return Double.compare(o2.getMoney(), o1.getMoney());
 					}
 				});
 			}

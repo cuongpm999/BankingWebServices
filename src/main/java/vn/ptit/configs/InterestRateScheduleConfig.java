@@ -31,7 +31,7 @@ public class InterestRateScheduleConfig {
 	DepositAccountRepository depositAccountRepository;
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	@Scheduled(fixedDelay = 1000 * 60 * 60 * 24)
+	@Scheduled(cron = "0 30 23 * * ?")
 	public void checkInterestRateSchedule() {
 		Date date = new Date();
 

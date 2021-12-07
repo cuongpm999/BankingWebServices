@@ -28,7 +28,7 @@ public class CustomerService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private int LIMIT = 5;
+	private int LIMIT = 20;
 
 	public List<Customer> findAllByStatusTrue(Map<String, Object> map) {
 		int page = 1;

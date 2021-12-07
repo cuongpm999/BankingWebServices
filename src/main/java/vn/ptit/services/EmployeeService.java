@@ -19,7 +19,7 @@ public class EmployeeService {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	private int LIMIT = 5;
+	private int LIMIT = 20;
 
 	public Employee loadEmployeeByUsername(String username) {
 		try {

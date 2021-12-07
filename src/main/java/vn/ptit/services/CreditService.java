@@ -18,7 +18,7 @@ public class CreditService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private int LIMIT = 5;
+	private int LIMIT = 20;
 
 	public List<Transaction> findByCreditAccount(String id, Map<String, Object> map) {
 		int page = 1;
@@ -41,7 +41,7 @@ public class CreditService {
 				Collections.sort(transactions, new Comparator<Transaction>() {
 					@Override
 					public int compare(Transaction o1, Transaction o2) {
-						return (int) (o1.getMoney() - o2.getMoney());
+						return Double.compare(o1.getMoney(), o2.getMoney());
 					}
 				});
 			}
@@ -49,7 +49,7 @@ public class CreditService {
 				Collections.sort(transactions, new Comparator<Transaction>() {
 					@Override
 					public int compare(Transaction o1, Transaction o2) {
-						return (int) (o2.getMoney() - o1.getMoney());
+						return Double.compare(o2.getMoney(), o1.getMoney());
 					}
 				});
 			}
@@ -78,7 +78,7 @@ public class CreditService {
 				Collections.sort(transactions, new Comparator<Transaction>() {
 					@Override
 					public int compare(Transaction o1, Transaction o2) {
-						return (int) (o1.getMoney() - o2.getMoney());
+						return Double.compare(o1.getMoney(), o2.getMoney());
 					}
 				});
 			}
@@ -86,11 +86,24 @@ public class CreditService {
 				Collections.sort(transactions, new Comparator<Transaction>() {
 					@Override
 					public int compare(Transaction o1, Transaction o2) {
-						return (int) (o2.getMoney() - o1.getMoney());
+						return Double.compare(o2.getMoney(), o1.getMoney());
 					}
 				});
 			}
 		}
 		return transactions;
+	}
+	
+	public List<Transaction> exportWithCreditAccount(String id, Map<String, Object> map) {
+		String jpql = "select a from Transaction a where a.creditAccount.id ='" + id + "'";
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getKey().equalsIgnoreCase("fromDate")) {
+				jpql += " and a.dateCreate >= '" + entry.getValue().toString() + "'";
+			} else if (entry.getKey().equalsIgnoreCase("toDate")) {
+				jpql += " and a.dateCreate <= '" + entry.getValue().toString() + "'";
+			}
+		}
+		Query query = entityManager.createQuery(jpql, Transaction.class);
+		return query.getResultList();
 	}
 }

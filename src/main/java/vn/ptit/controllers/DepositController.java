@@ -76,5 +76,10 @@ public class DepositController {
 	public List<Transaction> statisticByDepositAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
 		return depositService.statisticByDepositAccount(id, map);
 	}
+	
+	@PostMapping("/export-with-deposit-account/{id}")
+	public List<Transaction> exportWithDepositAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
+		return depositService.exportWithDepositAccount(id, map);
+	}
 
 }

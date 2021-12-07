@@ -59,4 +59,9 @@ public class CreditController {
 	public List<Transaction> statisticByCreditAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
 		return creditService.statisticByCreditAccount(id, map);
 	}
+	
+	@PostMapping("/export-with-credit-account/{id}")
+	public List<Transaction> exportWithCreditAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map){
+		return creditService.exportWithCreditAccount(id, map);
+	}
 }
