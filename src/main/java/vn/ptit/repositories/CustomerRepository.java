@@ -13,5 +13,4 @@ import vn.ptit.entities.Employee;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	@Query("select count(u) from Customer u where u.status = true")
 	public Integer countCustomer();
-
 }
