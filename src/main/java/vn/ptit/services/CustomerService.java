@@ -90,7 +90,10 @@ public class CustomerService {
 		String jpql = "select e from Customer e, CreatedBankAccount c  where e.status=true and c.customer = e.id and c.bankAccount.id = '"
 				+ id + "'";
 		Query query = entityManager.createQuery(jpql, Customer.class);
-		return (Customer) query.getResultList().get(0);
+		if (query.getResultList().size() > 0) {
+			return (Customer) query.getResultList().get(0);
+		}
+		return null;
 	}
 
 	public List<CustomerDepositStat> findAllWithBalanceInDepositMax() {
@@ -123,7 +126,7 @@ public class CustomerService {
 			customerDepositStat.setDeposit(Double.parseDouble(records.get(i)[7].toString()));
 			customerDepositStats.add(customerDepositStat);
 		}
-		
+
 		Collections.sort(customerDepositStats, new Comparator<CustomerDepositStat>() {
 
 			@Override
@@ -165,7 +168,7 @@ public class CustomerService {
 			customerCreditStat.setCredit(Double.parseDouble(records.get(i)[7].toString()));
 			customerCreditStats.add(customerCreditStat);
 		}
-		
+
 		Collections.sort(customerCreditStats, new Comparator<CustomerCreditStat>() {
 
 			@Override
