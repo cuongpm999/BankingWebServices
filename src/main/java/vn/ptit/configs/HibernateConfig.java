@@ -38,13 +38,13 @@ public class HibernateConfig {
 		HikariConfig dataSourceConfig = new HikariConfig();
 		dataSourceConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		
-		dataSourceConfig.setJdbcUrl("jdbc:mysql://localhost:3306/banking_project?useUnicode=true&characterEncoding=UTF-8");
-		dataSourceConfig.setUsername("root");
-		dataSourceConfig.setPassword("22042000");
+//		dataSourceConfig.setJdbcUrl("jdbc:mysql://localhost:3306/banking_project?useUnicode=true&characterEncoding=UTF-8");
+//		dataSourceConfig.setUsername("root");
+//		dataSourceConfig.setPassword("root");
 		
-//		dataSourceConfig.setJdbcUrl("jdbc:mysql://us-cdbr-east-04.cleardb.com:3306/heroku_3c475d904185207?reconnect=true");
-//		dataSourceConfig.setUsername("b665694d2d0764");
-//		dataSourceConfig.setPassword("a8fdd6cc");
+		dataSourceConfig.setJdbcUrl("jdbc:mysql://us-cdbr-east-04.cleardb.com:3306/heroku_3c475d904185207?reconnect=true");
+		dataSourceConfig.setUsername("b665694d2d0764");
+		dataSourceConfig.setPassword("a8fdd6cc");
 		return new HikariDataSource(dataSourceConfig);
 	}
 
