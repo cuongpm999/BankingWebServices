@@ -79,4 +79,28 @@ public class CreatePaymentController {
 	public Transaction findById(@PathVariable("id") int id) {
 		return transactionRepository.findById(id).get();
 	}
+	
+	@PostMapping("/find-by-credit-account/{id}")
+	public List<Transaction> findTransactionByCreditAccount(@PathVariable("id") String id, @RequestBody Map<String, Object> map) {
+		return createPaymentService.findTransactionByCreditAccount(id, map);
+	}
+	
+	@PostMapping("/insert-direct")
+	@Transactional(isolation = Isolation.SERIALIZABLE)
+	public HelperTransaction insertPaymentDirect(@RequestBody Transaction transaction) {
+		CreditAccount creditAccount = creditAccountService
+				.findByIdAndStatusTrue(transaction.getCreditAccount().getId());
+		double afterBalanceCredit = creditAccount.getBalance() - transaction.getMoney();
+		if (afterBalanceCredit < 0) {
+			return new HelperTransaction(1, transaction);
+		}
+		creditAccount.setBalance(afterBalanceCredit);
+		creditAccountRepository.save(creditAccount);
+		transaction.setCreditAccount(creditAccount);
+		transaction.setType("PAYMENT");
+		transaction.setAfterBalanceCredit(afterBalanceCredit);
+		transaction = transactionRepository.save(transaction);
+
+		return new HelperTransaction(2, transaction);
+	}
 }
