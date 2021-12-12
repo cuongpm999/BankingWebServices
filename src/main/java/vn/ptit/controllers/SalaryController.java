@@ -1,6 +1,5 @@
 package vn.ptit.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.ptit.entities.CreatedBankAccount;
 import vn.ptit.entities.Employee;
+import vn.ptit.entities.EmployeeSalary;
 import vn.ptit.entities.Salary;
 import vn.ptit.entities.Transaction;
 import vn.ptit.repositories.CreatedBankAccountRepository;
+import vn.ptit.repositories.EmployeeRepository;
 import vn.ptit.repositories.SalaryRepository;
 import vn.ptit.services.EmployeeService;
 import vn.ptit.services.SalaryService;
@@ -26,87 +27,91 @@ import vn.ptit.services.TransactionService;
 @RestController
 @RequestMapping("/rest/api/salary")
 public class SalaryController {
-	@Autowired SalaryRepository salaryRepository;
-	@Autowired SalaryService salaryService;
-	@Autowired TransactionService transactionService;
-	@Autowired EmployeeService employeeService; 
-	@Autowired CreatedBankAccountRepository createdBankAccountRepository;
-	
+	@Autowired
+	SalaryRepository salaryRepository;
+	@Autowired
+	SalaryService salaryService;
+	@Autowired
+	TransactionService transactionService;
+	@Autowired
+	EmployeeService employeeService;
+	@Autowired
+	CreatedBankAccountRepository createdBankAccountRepository;
+	@Autowired
+	EmployeeRepository employeeRepository;
+
 	@GetMapping("/find-by-id/{id}")
 	public Salary findById(@PathVariable("id") int salaryId) {
 		Optional<Salary> optSalary = salaryRepository.findById(salaryId);
-		if(optSalary.isPresent()) {
+		if (optSalary.isPresent()) {
 			return optSalary.get();
 		}
 		return null;
 	}
-	
-	@GetMapping("/find-all-by-employee/{id}")
-	public List<Salary> findSalariesByEmployee(@PathVariable("id") int employeeId){
-		return salaryService.findSalariesByEmployee(employeeId);
+
+	@GetMapping("/find-salary-in-month/{filter}")
+	public List<EmployeeSalary> filter_(@PathVariable("filter") String filter) {
+		String month = filter.split("\\-")[0];
+		String year = filter.split("\\-")[1];
+		int page = Integer.parseInt(filter.split("\\-")[2]);
+		return salaryService.getSalariesInMonth(month, year, page);
 	}
 	
-	@PostMapping("/insert/{id}")
-	public boolean insert(@RequestBody Salary salary, @PathVariable("id") int employeeId) {
-		List<Salary> salaries = salaryService.findSalariesByEmployee(employeeId);
-		for (Salary salary2 : salaries) {
-			if(salary2.getDateSalary().equalsIgnoreCase(salary.getDateSalary())) return false;
+	@PostMapping("/find-salary-detail")
+	public Salary findSalaryDetail(@RequestBody List<String> text) {
+		return salaryService.findSalaryDetail(text.get(0), text.get(1), text.get(2));
+	}
+
+	@GetMapping("/insert/{dateSalary}")
+	public boolean insert1(@PathVariable("dateSalary") String dateSalary) {
+		String date[] = dateSalary.split("\\-");
+		dateSalary = date[0] + "/" + date[1];
+		List<Salary> salaries = salaryRepository.findAll();
+		for (Salary salary : salaries) {
+			if (salary.getDateSalary().equals(dateSalary)) {
+				salary.setBonusSalary(calcBonusSalary(salary));
+				return true;
+			}
 		}
-		Employee employee = employeeService.findByIdAndStatusTrue(employeeId);
-		salary.setEmployee(employee);
-		List<Transaction> transactions = transactionService.findFirstTransactionInMonth(employeeId, salary.getDateSalary());
+		List<Employee> employees = employeeRepository.getAllByStatus();
+		Salary salary;
+		for (Employee employee : employees) {
+			salary = new Salary();
+			salary.setEmployee(employee);
+			salary.setDateSalary(dateSalary);
+			salary.setBasicSalary(employee.getBasicSalary());
+			salary.setBonusSalary(calcBonusSalary(salary));
+			salaryRepository.save(salary);
+		}
+		return true;
+	}
+	
+	private double calcBonusSalary(Salary salary) {
+		List<Transaction> transactions = transactionService.findFirstTransactionInMonth(salary.getEmployee().getId(),
+				salary.getDateSalary());
 		double total = 0;
 		for (Transaction transaction : transactions) {
 			total += transaction.getMoney() * 0.02;
 		}
-		if(employee.getPosition().equalsIgnoreCase("MANAGER")) {
-			transactions = transactionService.findFirstTransactionToManager(employeeId, salary.getDateSalary());
+		if (salary.getEmployee().getPosition().equalsIgnoreCase("MANAGER")) {
+			transactions = transactionService.findFirstTransactionToManager(salary.getEmployee().getId(),
+					salary.getDateSalary());
 			for (Transaction transaction : transactions) {
 				total += transaction.getMoney() * 0.02;
 			}
 			String datas[] = salary.getDateSalary().split("\\/");
 			int month = Integer.parseInt(datas[0]);
 			int year = Integer.parseInt(datas[1]);
-			List<CreatedBankAccount> createdBankAccounts = createdBankAccountRepository.quantityCreateCreditAccountByEmployee(month, year, employeeId);
+			List<CreatedBankAccount> createdBankAccounts = createdBankAccountRepository
+					.quantityCreateCreditAccountByEmployee(month, year, salary.getEmployee().getId());
 			total += createdBankAccounts.size() * 500000;
 		}
-		salary.setBonusSalary(total);
-		salaryRepository.save(salary);
-		return true;
-	}
-	
-	@PostMapping("/update/{id}")
-	public boolean update(@RequestBody Salary salary, @PathVariable("id") int employeeId) {
-		List<Salary> salaries = salaryService.findSalariesByEmployee(employeeId);
-		for (Salary salary2 : salaries) {
-			if(salary2.getId() != salary.getId() && salary2.getDateSalary().equalsIgnoreCase(salary.getDateSalary())) return false;
-		}
-		Employee employee = employeeService.findByIdAndStatusTrue(employeeId);
-		salary.setEmployee(employee);
-		List<Transaction> transactions = transactionService.findFirstTransactionInMonth(employeeId, salary.getDateSalary());
-		double total = 0;
-		for (Transaction transaction : transactions) {
-			total += transaction.getMoney() * 0.02;
-		}
-		if(employee.getPosition().equalsIgnoreCase("MANAGER")) {
-			transactions = transactionService.findFirstTransactionToManager(employeeId, salary.getDateSalary());
-			for (Transaction transaction : transactions) {
-				total += transaction.getMoney() * 0.02;
-			}
-			String datas[] = salary.getDateSalary().split("\\/");
-			int month = Integer.parseInt(datas[0]);
-			int year = Integer.parseInt(datas[1]);
-			List<CreatedBankAccount> createdBankAccounts = createdBankAccountRepository.quantityCreateCreditAccountByEmployee(month, year, employeeId);
-			total += createdBankAccounts.size() * 500000;
-		}
-		salary.setBonusSalary(total);
-		salaryRepository.save(salary);
-		return true;
+		return total;
 	}
 	
 	@PostMapping("/filter")
-	public List<Salary> filter(@RequestBody Map<String, Object> map){
+	public List<Salary> filter(@RequestBody Map<String, Object> map) {
 		return salaryService.filter(map);
 	}
-	
+
 }
