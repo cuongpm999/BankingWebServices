@@ -97,8 +97,8 @@ public class TransactionService {
 		String sql = "SELECT Transaction.* FROM Transaction,"
 				+ " (SELECT T.depositAccountId, MIN(T.dateCreate) AS minDate"
 				+ " FROM Transaction AS T, CreatedBankAccount AS C" + " WHERE C.employeeId = " + employeeId
-				+ " AND T.EmployeeId = C.EmployeeId  AND T.type = 'DEPOSIT'" + " AND MONTH(C.dateCreate) = " + month
-				+ " AND YEAR(C.dateCreate) = " + year + " GROUP BY T.depositAccountId) AS A"
+				+ " AND T.EmployeeId = C.EmployeeId  AND T.type = 'DEPOSIT'" + " AND MONTH(T.dateCreate) = " + month
+				+ " AND YEAR(T.dateCreate) = " + year + " GROUP BY T.depositAccountId) AS A"
 				+ " WHERE Transaction.DateCreate = A.minDate;";
 		Query query = entityManager.createNativeQuery(sql, Transaction.class);
 		List<Transaction> transactions1 = query.getResultList();
