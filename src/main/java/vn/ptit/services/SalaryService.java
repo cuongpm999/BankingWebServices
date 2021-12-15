@@ -1,5 +1,8 @@
 package vn.ptit.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -11,6 +14,7 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Service;
 
+import vn.ptit.entities.EmployeeSalary;
 import vn.ptit.entities.Salary;
 
 @Service
@@ -18,11 +22,44 @@ public class SalaryService {
 	@PersistenceContext
 	EntityManager entityManager;
 	private int LIMIT = 20;
-
-	public List<Salary> findSalariesByEmployee(int employeeId) {
-		String jpql = "SELECT s FROM Salary s WHERE s.employee.id = " + employeeId;
+		
+	public Salary findSalaryDetail(String empid, String month, String year) {
+		String jpql = "SELECT s FROM Salary s WHERE s.employee.id = '" +empid + "'";
+		jpql += " AND substring(s.dateSalary,1,2) = '" + month + "'";
+		jpql += "AND substring(s.dateSalary,4,4) = '" + year + "'";
 		Query query = entityManager.createQuery(jpql, Salary.class);
-		return query.getResultList();
+		return (Salary) query.getResultList().get(0);
+	}
+	
+	public List<EmployeeSalary> getSalariesInMonth(String month, String year, int page) {
+		String sql = "SELECT e.*, (s.basicSalary + s.bonusSalary) AS totalSalary " + "FROM Employee AS e, Salary AS s "
+				+ "WHERE e.id = s.employeeId " + "AND e.status = 1 " + "AND substring(s.dateSalary,1,2) = '" + month
+				+ "'" + "AND substring(s.dateSalary,4,4) = '" + year + "'";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setFirstResult((page - 1) * LIMIT);
+		query.setMaxResults(LIMIT);
+		List<Object[]> records = query.getResultList();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		List<EmployeeSalary> employeeSalaries = new ArrayList<>();
+		for (int i = 0; i < records.size(); i++) {
+			EmployeeSalary employeeSalary = new EmployeeSalary();
+			employeeSalary.setId(Integer.parseInt(records.get(i)[0].toString()));
+			employeeSalary.setIdCard(records.get(i)[1].toString());
+			employeeSalary.setFullName(records.get(i)[2].toString());
+			try {
+				employeeSalary.setDateOfBirth(simpleDateFormat.parse(records.get(i)[3].toString()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			employeeSalary.setAddress(records.get(i)[4].toString());
+			employeeSalary.setLevel(Integer.parseInt(records.get(i)[5].toString()));
+			employeeSalary.setSeniority(Integer.parseInt(records.get(i)[6].toString()));
+			employeeSalary.setPosition(records.get(i)[7].toString());
+			employeeSalary.setBasicSalary(Double.parseDouble(records.get(i)[8].toString()));
+			employeeSalary.setTotalSalary(Double.parseDouble(records.get(i)[10].toString()));
+			employeeSalaries.add(employeeSalary);
+		}
+		return employeeSalaries;
 	}
 
 	public List<Salary> filter(Map<String, Object> map) {
@@ -71,6 +108,35 @@ public class SalaryService {
 			}
 		}
 		return salaries;
+	}
+	
+	public List<EmployeeSalary> getAllSalariesInMonth(String month, String year) {
+		String sql = "SELECT e.*, (s.basicSalary + s.bonusSalary) AS totalSalary " + "FROM Employee AS e, Salary AS s "
+				+ "WHERE e.id = s.employeeId " + "AND e.status = 1 " + "AND substring(s.dateSalary,1,2) = '" + month
+				+ "'" + "AND substring(s.dateSalary,4,4) = '" + year + "'";
+		Query query = entityManager.createNativeQuery(sql);
+		List<Object[]> records = query.getResultList();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		List<EmployeeSalary> employeeSalaries = new ArrayList<>();
+		for (int i = 0; i < records.size(); i++) {
+			EmployeeSalary employeeSalary = new EmployeeSalary();
+			employeeSalary.setId(Integer.parseInt(records.get(i)[0].toString()));
+			employeeSalary.setIdCard(records.get(i)[1].toString());
+			employeeSalary.setFullName(records.get(i)[2].toString());
+			try {
+				employeeSalary.setDateOfBirth(simpleDateFormat.parse(records.get(i)[3].toString()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			employeeSalary.setAddress(records.get(i)[4].toString());
+			employeeSalary.setLevel(Integer.parseInt(records.get(i)[5].toString()));
+			employeeSalary.setSeniority(Integer.parseInt(records.get(i)[6].toString()));
+			employeeSalary.setPosition(records.get(i)[7].toString());
+			employeeSalary.setBasicSalary(Double.parseDouble(records.get(i)[8].toString()));
+			employeeSalary.setTotalSalary(Double.parseDouble(records.get(i)[10].toString()));
+			employeeSalaries.add(employeeSalary);
+		}
+		return employeeSalaries;
 	}
 
 }

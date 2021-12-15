@@ -46,6 +46,9 @@ public class Employee {
 	@Column(name = "Position", length = 255)
 	private String position;
 	
+	@Column(name = "BasicSalary")
+	private double basicSalary;
+	
 	@Column(name = "status")
 	private boolean status;
 	
@@ -148,6 +151,14 @@ public class Employee {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public double getBasicSalary() {
+		return basicSalary;
+	}
+
+	public void setBasicSalary(double basicSalary) {
+		this.basicSalary = basicSalary;
 	}
 
 }
